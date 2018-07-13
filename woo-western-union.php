@@ -1,5 +1,4 @@
 <?php
-
 /*
 Plugin Name: Woocommerce Western Union Payment Addon
 Plugin URI: https://daxdax89.com
@@ -170,25 +169,14 @@ function wu_form_func( ) {
 add_action( 'plugins_loaded', 'wc_western_union_gateway_init', 11 );
 function wc_western_union_gateway_init() {
 	class WC_Western_Union extends WC_Payment_Gateway {
-
-		public $mail_ime;
-
-
 		/**
 		 * Constructor for the gateway.
 		 */
 
-		// private $mail_ime = 'Dakisa';
-
-		// public function setMailIme($mail_ime) { 
-		// 	$this->mail_ime = $mail_ime; 
-		// }
-
-		// public function getMailIme($mail_ime) { 
-		// 	return $this->mail_ime; 
-		// }
+		
 
 		public function __construct() {
+			$this ->mail_name = "Sample Name";
 			$this->id                 = 'western_union';
 			$this->icon               = apply_filters('woocommerce_wu_icon', plugins_url().'/woo-western-union/assets/wu.png');
 			$this->has_fields         = false;
@@ -296,10 +284,10 @@ function wc_western_union_gateway_init() {
 		public function thankyou_page() {
 			$t = explode("-",$this->names_under);
 			$single_name = array_rand($t,1);
-			$this -> mail_ime = $t[$single_name];
+			$this->mail_name = $t[$single_name];
 			if ( $this->instructions ) {
 				if($this->link_url !== ''){
-					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this -> mail_ime);			
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name."oprem");			
 				}else{
 					$t = explode("-",$this->names_under);
 					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$t[$single_name].$this->name_selection);			
@@ -319,12 +307,12 @@ function wc_western_union_gateway_init() {
 		public function email_instructions( $order, $sent_to_admin, $plain_text = false) {
 			$t = explode("-",$this -> names_under);
 			$single_name = array_rand($t,1);
-			$t[$single_name] = $this -> mail_ime;
+			$mail_name = $this->mail_name;
 			if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
 				if($this->link_url !== ''){
-					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$t[$single_name]);			
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name);			
 				}else{
-					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$t[$single_name]);			
+					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$this->mail_name);			
 				}
 				echo wpautop( wptexturize( $instructions ) ) . PHP_EOL;
 			}

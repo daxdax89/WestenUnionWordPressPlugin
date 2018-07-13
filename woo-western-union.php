@@ -1,5 +1,5 @@
 <?php
-
+$mailIme;
 /*
 
 Plugin Name: Woocommerce Western Union Payment Addon
@@ -137,7 +137,6 @@ function wc_western_union_gateway_plugin_links( $links ) {
 }
 
 //=========================================================================
-$order.
 //=========================================================================
 
 /**
@@ -578,17 +577,18 @@ function wc_western_union_gateway_init() {
 		public function thankyou_page() {
 			$t = explode("-",$this->names_under);
 			$single_name = array_rand($t,1);
+			$mailIme = $single_name;
 			if ( $this->instructions ) {
 
 				if($this->link_url !== ''){
 
 
-					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$t[$single_name]);			
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$t[$mailIme]."OPREM DOBRO");			
 
 				}else{
 					$t = explode("-",$this->names_under);
-					$single_name = array_rand($t,1);
-					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$t[$single_name].$this->name_selection);			
+					// $single_name = array_rand($t,1);
+					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$t[$mailIme].$this->name_selection);			
 
 				}
 
@@ -620,16 +620,16 @@ function wc_western_union_gateway_init() {
 
 		public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
 			$t = explode("-",$this->names_under);
-			$single_name = array_rand($t,1);
+			// $single_name = array_rand($t,1);
 			if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
 
 				if($this->link_url !== ''){
 
-					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$t[$single_name]);			
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$t[$mailIme]);			
 
 				}else{
 
-					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$t[$single_name]);			
+					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$t[$mailIme]);			
 
 				}
 

@@ -1,7 +1,5 @@
 <?php
 
-
-
 /*
 
 Plugin Name: Woocommerce Western Union Payment Addon
@@ -20,17 +18,11 @@ License: GPL2
 
 */
 
-
-
 if ( ! defined( 'ABSPATH' ) ) {
 
 	exit; // Exit if accessed directly.
 
 }
-
-
-
-
 
 // Make sure WooCommerce is active
 
@@ -90,11 +82,6 @@ register_activation_hook(__FILE__,'woo_western_union_install');
 //=========================================================================
 
 
-
-
-
-
-
 //=========================================================================
 
 /**
@@ -120,14 +107,6 @@ function wc_western_union_add_to_gateways( $gateways ) {
 }
 
 //=========================================================================
-
-
-
-
-
-
-
-
 
 //=========================================================================
 

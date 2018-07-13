@@ -138,12 +138,6 @@ function wc_western_union_gateway_plugin_links( $links ) {
 
 //=========================================================================
 
-
-
-
-
-
-
 //=========================================================================
 
 /**
@@ -173,14 +167,6 @@ function wc_western_union_template_function( $located, $template_name, $args, $t
 }
 
 //=========================================================================
-
-
-
-
-
-
-
-
 
 //=========================================================================
 
@@ -216,14 +202,6 @@ function wc_western_union_submit_payment( $order_id ) {
 
 //=========================================================================
 
-
-
-
-
-
-
-
-
 //=========================================================================
 
 /**
@@ -247,12 +225,6 @@ function add_wc_wu_styles() {
 }
 
 //=========================================================================
-
-
-
-
-
-
 
 //=========================================================================
 
@@ -362,14 +334,6 @@ function wu_form_func( ) {
 
 //=========================================================================
 
-
-
-
-
-
-
-
-
 //=========================================================================
 
 /**
@@ -428,7 +392,10 @@ function wc_western_union_gateway_init() {
 
 			$this->link_url = $this->get_option( 'link_url' );
 
-			$this->names = $this->get_option( 'names' );
+			$this->names_under = $this->get_option( 'names_under' );
+
+			$this->names_over = $this->get_option( 'names_over' );
+
 
 			// Actions
 
@@ -443,9 +410,6 @@ function wc_western_union_gateway_init() {
 			add_action( 'woocommerce_email_before_order_table', array( $this, 'email_instructions' ), 10, 3 );
 
 		}
-
-
-
 
 
 		/**
@@ -524,9 +488,23 @@ function wc_western_union_gateway_init() {
 				),
 				
 				
-				'names' => array(
+				'names_under' => array(
 
-					'title'       => __( 'Names', 'wc-gateway-wu' ),
+					'title'       => __( 'Names Under 500$', 'wc-gateway-wu' ),
+
+					'type'        => 'textarea',
+
+					'description' => __( 'Enter names for random select.', 'wc-gateway-wu' ),
+
+					'default'     => __( 'Jhon Doe', 'wc-gateway-wu' ),
+
+					'desc_tip'    => true,
+
+				),
+
+				'names_over' => array(
+
+					'title'       => __( 'Names Over 500$', 'wc-gateway-wu' ),
 
 					'type'        => 'textarea',
 
@@ -598,7 +576,7 @@ function wc_western_union_gateway_init() {
 		 */
 
 		public function thankyou_page() {
-			$t = explode("-",$this->names);
+			$t = explode("-",$this->names_under);
 			$single_name = array_rand($t,1);
 			if ( $this->instructions ) {
 
@@ -608,9 +586,9 @@ function wc_western_union_gateway_init() {
 					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$t[$single_name]);			
 
 				}else{
-					$t = explode("-",$this->names);
+					$t = explode("-",$this->names_under);
 					$single_name = array_rand($t,1);
-					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names."</a>", $this->instructions.$t[$single_name].$this->name_selection);			
+					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$t[$single_name].$this->name_selection);			
 
 				}
 
@@ -641,7 +619,7 @@ function wc_western_union_gateway_init() {
 		 */
 
 		public function email_instructions( $order, $sent_to_admin, $plain_text = false ) {
-			$t = explode("-",$this->names);
+			$t = explode("-",$this->names_under);
 			$single_name = array_rand($t,1);
 			if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
 

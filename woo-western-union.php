@@ -176,8 +176,6 @@ function wc_western_union_gateway_init() {
 		
 
 		public function __construct() {
-			$this ->mail_name = "Sample Name";
-			// $this ->mail_name = array_rand($t);
 			$this->id                 = 'western_union';
 			$this->icon               = apply_filters('woocommerce_wu_icon', plugins_url().'/woo-western-union/assets/wu.png');
 			$this->has_fields         = false;
@@ -282,18 +280,6 @@ function wc_western_union_gateway_init() {
 			) );
 		}
 
-
-		if ($this->names_under) {
-
-		} else {
-			
-		}
-
-		// public function thankyou_page($name) { 
-		// 	use $name here
-		// } 
-
-
 		/**
 		 * Output for the order received page.
 		 */
@@ -303,7 +289,7 @@ function wc_western_union_gateway_init() {
 					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name);			
 				}else{
 					$t = explode("-",$this->names_under);
-					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$t[$single_name].$this->name_selection);			
+					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$this->mail_name.$this->name_selection);			
 				}
 				echo wpautop( wptexturize( $instructions ) );
 			}
@@ -318,9 +304,6 @@ function wc_western_union_gateway_init() {
 		 * @param bool $plain_text
 		 */
 		public function email_instructions( $order, $sent_to_admin, $plain_text = false) {
-			// $t = explode("-",$this -> names_under);
-			// $single_name = array_rand($t,1);
-			// $mail_name = $this->mail_name;
 			if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
 				if($this->link_url !== ''){
 					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name);			

@@ -1,13 +1,15 @@
 <?php
+
 /*
 Plugin Name: Woocommerce Western Union Payment Addon
 Plugin URI: https://daxdax89.com
 Description: Integrates Western Union with Woocommerce with name randomizing and order settings
-Version: 1.0
+Version: 2.0
 Author: DaX
 Author URI: https://daxdax89.com
 License: GPL2
 */
+
 if ( ! defined( 'ABSPATH' ) ) {
 	exit; // Exit if accessed directly.
 }
@@ -15,11 +17,13 @@ if ( ! defined( 'ABSPATH' ) ) {
 if ( ! in_array( 'woocommerce/woocommerce.php', apply_filters( 'active_plugins', get_option( 'active_plugins' ) ) ) ) {
 	return;
 }
+
 //=========================================================================
 /**
  * function woo_western_union_install
  *
  */
+
 function woo_western_union_install(){
 	$content = '<h2>Submit Western Union Payment Information</h2>
 	<hr>
@@ -38,6 +42,7 @@ function woo_western_union_install(){
 	}
 }
 register_activation_hook(__FILE__,'woo_western_union_install');
+
 //=========================================================================
 //=========================================================================
 /**
@@ -46,11 +51,13 @@ register_activation_hook(__FILE__,'woo_western_union_install');
  * @param array $gateways
  * @return array
  */
+
 add_filter( 'woocommerce_payment_gateways', 'wc_western_union_add_to_gateways' );
 function wc_western_union_add_to_gateways( $gateways ) {
 	$gateways['western_union'] = 'WC_Western_Union';
 	return $gateways;
 }
+
 //=========================================================================
 //=========================================================================
 /**
@@ -59,6 +66,7 @@ function wc_western_union_add_to_gateways( $gateways ) {
  * @param array $links
  * @return array
  */
+
 add_filter( 'plugin_action_links_' . plugin_basename( __FILE__ ), 'wc_western_union_gateway_plugin_links' );
 function wc_western_union_gateway_plugin_links( $links ) {
 	$plugin_links = array(
@@ -66,12 +74,14 @@ function wc_western_union_gateway_plugin_links( $links ) {
 	);
 	return array_merge( $plugin_links, $links );
 }
+
 //=========================================================================
 //=========================================================================
 /**
  * function wc_western_union_submit_payment
  * 
  */
+
 add_filter( 'wc_get_template', 'wc_western_union_template_function' ,10,5);
 function wc_western_union_template_function( $located, $template_name, $args, $template_path, $default_path ) {
 	if($template_name === 'order/order-details-customer.php'){
@@ -80,12 +90,14 @@ function wc_western_union_template_function( $located, $template_name, $args, $t
 	return $located;
 	
 }
+
 //=========================================================================
 //=========================================================================
 /**
  * function wc_western_union_submit_payment
  * 
  */
+
 add_action('woocommerce_thankyou', 'wc_western_union_submit_payment', 10, 1);
 function wc_western_union_submit_payment( $order_id ) {
 	if ( ! $order_id )
@@ -95,23 +107,27 @@ function wc_western_union_submit_payment( $order_id ) {
 		echo "<a href='/purchase/wu-form/' class='thank-you-submit-payment' >Submit Payment</a>";
 	}
 }
+
 //=========================================================================
 //=========================================================================
 /**
  * function add_wc_wu_styles
  * 
  */
+
 add_action( 'wp_enqueue_scripts', 'add_wc_wu_styles' );
 function add_wc_wu_styles() {
 	wp_enqueue_style( 'wc-wu-style', plugins_url().'/woo-western-union/assets/wc-wu-theme.css');
 	
 }
+
 //=========================================================================
 //=========================================================================
 /**
  * Add [wu-form]
  * 
  */
+
 add_shortcode( 'wu_form', 'wu_form_func' );
 function wu_form_func( ) {
 	ob_start();
@@ -160,20 +176,21 @@ function wu_form_func( ) {
 	</div>';
 	return ob_get_clean();
 }
+
 //=========================================================================
 //=========================================================================
 /**
  * Western Union Payment Gateway
  *
  */
+
 add_action( 'plugins_loaded', 'wc_western_union_gateway_init', 11 );
 function wc_western_union_gateway_init() {
 	class WC_Western_Union extends WC_Payment_Gateway {
+
 		/**
 		 * Constructor for the gateway.
 		 */
-
-		
 
 		public function __construct() {
 			$this->id                 = 'western_union';
@@ -200,6 +217,7 @@ function wc_western_union_gateway_init() {
 			$t =explode("-", $this-> names_under);
 			$this-> mail_name = $t[array_rand($t, 1)];
 		}
+
 		/**
 		 * Initialize Gateway Settings Form Fields
 		 */
@@ -283,6 +301,7 @@ function wc_western_union_gateway_init() {
 		/**
 		 * Output for the order received page.
 		 */
+
 		public function thankyou_page() {
 			if ( $this->instructions ) {
 				if($this->link_url !== ''){
@@ -293,6 +312,8 @@ function wc_western_union_gateway_init() {
 				}
 				echo wpautop( wptexturize( $instructions ) );
 			}
+
+
 		}
 
 		/**
@@ -303,6 +324,7 @@ function wc_western_union_gateway_init() {
 		 * @param bool $sent_to_admin
 		 * @param bool $plain_text
 		 */
+
 		public function email_instructions( $order, $sent_to_admin, $plain_text = false) {
 			if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
 				if($this->link_url !== ''){
@@ -320,6 +342,7 @@ function wc_western_union_gateway_init() {
 		 * @param int $order_id
 		 * @return array
 		 */
+
 		public function process_payment( $order_id ) {
 			$order = wc_get_order( $order_id );
 			

@@ -1,5 +1,4 @@
 <?php
-
 /*
 Plugin Name: Woocommerce Western Union Payment Addon
 Plugin URI: https://daxdax89.com
@@ -193,6 +192,7 @@ function wc_western_union_gateway_init() {
 		 */
 
 		public function __construct() {
+
 			$this->id                 = 'western_union';
 			$this->icon               = apply_filters('woocommerce_wu_icon', plugins_url().'/woo-western-union/assets/wu.png');
 			$this->has_fields         = false;
@@ -305,18 +305,29 @@ function wc_western_union_gateway_init() {
 		public function thankyou_page() {
 			if ( $this->instructions ) {
 				if($this->link_url !== ''){
-					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name);			
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name."<script>
+						var dax = '$this->mail_name';
+						console.log('Picked name is: ' + dax);
+						</script>"."<script>console.log(dax);</script>"."
+						<form action='?'>
+						<input type'text' name='firstname' value='$this->mail_name'>
+						<input type='submit' value='Submit' id='salje'>
+						</form> 
+						<script>
+							$(document).ready(function(
+								$('#salje').trigger('click');
+							));
+						</script>
+						");			
 				}else{
 					$t = explode("-",$this->names_under);
-					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$this->mail_name.$this->name_selection);			
+					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$this->mail_name.$this->name_selection);
 				}
 				echo wpautop( wptexturize( $instructions ) );
 			}
-
-
 		}
 
-		/**
+			/**
 		 * Add content to the WC emails.
 		 *
 		 * @access public
@@ -328,7 +339,12 @@ function wc_western_union_gateway_init() {
 		public function email_instructions( $order, $sent_to_admin, $plain_text = false) {
 			if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
 				if($this->link_url !== ''){
-					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name);			
+					echo "<script>document.writeln(dax);
+					console.log('Poslato ime: ' + dax);
+					</script>";
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name."<script>dax);
+						console.log('Poslato ime: ' + dax);
+						</script>"."lol");			
 				}else{
 					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$this->mail_name);			
 				}

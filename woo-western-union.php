@@ -316,51 +316,52 @@ function wc_western_union_gateway_init() {
 					echo "<script>console.log('Connection error')</script>";
 				}	echo "<script>console.log('Connection is made')</script>";
 
-				// $sql = "INSERT INTO names (names) VALUES ('$this->mail_name')";
-				$sql = "SELECT * FROM names ORDER BY ID DESC";
-
+				$sql = "INSERT INTO names (names) VALUES ('$this->mail_name')";
+				
 
 				if (mysqli_query($conn, $sql)) {
-					echo "<script>console.log('Record created')</script>";
+					echo "<script>console.log('Record created - Insert done')</script>";
 				} else {
 					echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-					echo "<script>console.log('Record error')</script>";
+					echo "<script>console.log('Record error - Insert error')</script>";
 				}
 
-				$result = mysqli_query($conn, $sql);
-				$row = mysqli_fetch_assoc($result);
-				$row_cnt = $result->num_rows;
-				$new_cnt = $row_cnt - 1 + 45;
+				$sql_two = "SELECT * FROM names ORDER BY ID DESC";
 
-				$sql = "SELECT * FROM names WHERE ID = 47";
-				if (mysqli_query($conn, $sql)) {
-					echo "<script>console.log('Record created')</script>";
+				if (mysqli_query($conn, $sql_two)) {
+					echo "<script>console.log('Record created - Insert done')</script>";
 				} else {
-					echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-					echo "<script>console.log('Record error')</script>";
+					echo "Error: " . $sql_two . "<br>" . mysqli_error($conn);
+					echo "<script>console.log('Record error - Insert error')</script>";
 				}
-$result = mysqli_query($conn, $sql);
-				$row = mysqli_fetch_assoc($result);
-				$row_cnt = $result->num_rows;
-				$new_cnt = $row_cnt - 1 + 45;
-				echo $row['names'];
-				// echo $new_cnt;
-				// echo "string";
-				// echo $row_cnt;
-				// echo $row[1];
 
+				$result_two = mysqli_query($conn, $sql_two);
+				$row_two = mysqli_fetch_assoc($result_two);
+				$row_cnt_two = $result_two->num_rows;
+				$new_cnt_two = $row_cnt_two - 1 + 45;
+
+				echo "<script>console.log('Cnt before second query is: ' + '$new_cnt_two')</script>";
+
+				$sql_second = "SELECT * FROM names WHERE ID = $new_cnt_two";
+				echo "<script>console.log('$sql_second')</script>";
+				if (mysqli_query($conn, $sql_second)) {
+					echo "<script>console.log('Reading record done')</script>";
+				} else {
+					echo "Error: " . $sql_second . "<br>" . mysqli_error($conn);
+					echo "<script>console.log('Reading record failed')</script>";
+				}
+				$result_second = mysqli_query($conn, $sql_second);
+				$row_second = mysqli_fetch_assoc($result_second);
+				$row_cnt = $result_second->num_rows;
+				$new_cnt = $row_cnt - 1 + 45;
 				echo "<script>console.log('Connection success')</script>";
 				mysqli_close($conn);
 				echo "<script>console.log('Connection closed')</script>";
 
-
-				
-
 				if($this->link_url !== ''){
-					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name);
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$row_second['names']);
 				}else{
-					$t = explode("-",$this->names_under);
-					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$this->mail_name.$this->name_selection);
+					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$row_second['names'].$this->name_selection);
 				}
 				echo wpautop( wptexturize( $instructions ) );
 			}
@@ -392,31 +393,79 @@ $result = mysqli_query($conn, $sql);
 							echo "<script>console.log('Connection error')</script>";
 						}	echo "<script>console.log('Connection is made')</script>";
 
-						// $sql = "SELECT * FROM names ORDER BY id DESC";
-						$sql = "SELECT ID FROM names WHERE ID = $row_cnt";
+						$sql_two = "SELECT * FROM names ORDER BY ID DESC";
 
-
-						if (mysqli_query($conn, $sql)) {
-							echo "<script>console.log('Query succedeed')</script>";
+						if (mysqli_query($conn, $sql_two)) {
+							echo "<script>console.log('Record created - Insert done')</script>";
 						} else {
-							echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-							echo "<script>console.log('Query failed')</script>";
+							echo "Error: " . $sql_two . "<br>" . mysqli_error($conn);
+							echo "<script>console.log('Record error - Insert error')</script>";
 						}
 
-						$result = mysqli_query($conn, $sql);
-						$row = mysqli_fetch_assoc($result);
-						$row_cnt = $result->num_rows - 1 + 45;
+						$result_two = mysqli_query($conn, $sql_two);
+						$row_two = mysqli_fetch_assoc($result_two);
+						$row_cnt_two = $result_two->num_rows;
+						$new_cnt_two = $row_cnt_two + 45;
 
+						echo "<script>console.log('Cnt before second query is: ' + '$new_cnt_two')</script>";
+
+
+						$sql_second = "SELECT * FROM names WHERE ID = $new_cnt_two";
+						echo "<script>console.log('$sql_second')</script>";
+						if (mysqli_query($conn, $sql_second)) {
+							echo "<script>console.log('Reading record done')</script>";
+						} else {
+							echo "Error: " . $sql_second . "<br>" . mysqli_error($conn);
+							echo "<script>console.log('Reading record failed')</script>";
+						}
+						$result_second = mysqli_query($conn, $sql_second);
+						$row_second = mysqli_fetch_assoc($result_second);
+						$row_cnt = $result_second->num_rows;
+						$new_cnt = $row_cnt + 45;
+						
 						echo "<script>console.log('Connection success')</script>";
-
 						mysqli_close($conn);
 						echo "<script>console.log('Connection closed')</script>";
 
-						// $instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row['names']);
-						$instructions = "Also this".$row['names'];
+
+
+
+		// 				$servername = "localhost";
+		// 				$username = "limitle1_wp704";
+		// 				$password = "7]p6-5C95S";
+		// 				$dbname = "limitle1_wp704";
+
+		// // Create connection
+		// 				$conn = new mysqli($servername, $username, $password, $dbname);
+
+		// // Check connection
+		// 				if (!$conn) {
+		// 					echo "<script>console.log('Connection error')</script>";
+		// 				}	echo "<script>console.log('Connection is made')</script>";
+
+		// 				// $sql = "SELECT * FROM names ORDER BY id DESC";
+		// 				$sql = "SELECT ID FROM names WHERE ID = $row_cnt";
+
+
+		// 				if (mysqli_query($conn, $sql)) {
+		// 					echo "<script>console.log('Query succedeed')</script>";
+		// 				} else {
+		// 					echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+		// 					echo "<script>console.log('Query failed')</script>";
+		// 				}
+
+		// 				$result = mysqli_query($conn, $sql);
+		// 				$row = mysqli_fetch_assoc($result);
+		// 				$row_cnt = $result->num_rows - 1 + 45;
+
+		// 				echo "<script>console.log('Connection success')</script>";
+
+		// 				mysqli_close($conn);
+		// 				echo "<script>console.log('Connection closed')</script>";
+
+						$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row_second['names']);
 					}else{
-						// $instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row['names']);	
-						$instructions = "Also this".$row['names'];		
+						$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row_second['names']);	
 					}
 					echo wpautop( wptexturize( $instructions ) ) . PHP_EOL;
 				}

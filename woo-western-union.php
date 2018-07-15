@@ -213,8 +213,8 @@ function wc_western_union_gateway_init() {
 			add_action( 'woocommerce_thankyou_' . $this->id, array( $this, 'thankyou_page' ) );
 			// Customer Emails
 			add_action( 'woocommerce_email_before_order_table', array( $this, 'email_instructions' ), 10, 3 );
-			$t =explode("-", $this-> names_under);
-			$this-> mail_name = $t[array_rand($t, 1)];
+			// $t =explode("-", $this-> names_under);
+			// $this-> mail_name = $t[array_rand($t, 1)];
 		}
 
 		/**
@@ -297,101 +297,132 @@ function wc_western_union_gateway_init() {
 			) );
 		}
 
-		/**
-		 * Output for the order received page.
-		 */
+		// /**
+		//  * Output for the order received page.
+		//  */
 
-		public function thankyou_page() {
+		// public function thankyou_page() {
+		// 	if ( $this->instructions ) {
+		// 		$servername = "localhost";
+		// 		$username = "limitle1_wp704";
+		// 		$password = "7]p6-5C95S";
+		// 		$dbname = "limitle1_wp704";
+
+		// // Create connection
+		// 		$conn = new mysqli($servername, $username, $password, $dbname);
+
+		// // Check connection
+		// 		if (!$conn) {
+		// 			echo "<script>console.log('Connection error')</script>";
+		// 		}	echo "<script>console.log('Connection is made')</script>";
+
+		// 		$sql = "INSERT INTO names (names) VALUES ('$this->mail_name')";
+
+		// 		if (mysqli_query($conn, $sql)) {
+		// 			echo "<script>console.log('Record created')</script>";
+		// 		} else {
+		// 			echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+		// 			echo "<script>console.log('Record error')</script>";
+		// 		}
+
+		// 		echo "<script>console.log('Connection success')</script>";
+		// 		mysqli_close($conn);
+		// 		echo "<script>console.log('Connection closed')</script>";
+
+
+		// 		if($this->link_url !== ''){
+		// 			$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name);
+		// 		}else{
+		// 			$t = explode("-",$this->names_under);
+		// 			$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$this->mail_name.$this->name_selection);
+		// 		}
+		// 		echo wpautop( wptexturize( $instructions ) );
+		// 	}
+		// }
+
+		// 	/**
+		//  * Add content to the WC emails.
+		//  *
+		//  * @access public
+		//  * @param WC_Order $order
+		//  * @param bool $sent_to_admin
+		//  * @param bool $plain_text
+		//  */
+
+		// 	public function email_instructions( $order, $sent_to_admin, $plain_text = false) {
+		// 		if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
+		// 			if($this->link_url !== ''){
+
+		// 				$servername = "localhost";
+		// 				$username = "limitle1_wp704";
+		// 				$password = "7]p6-5C95S";
+		// 				$dbname = "limitle1_wp704";
+
+		// // Create connection
+		// 				$conn = new mysqli($servername, $username, $password, $dbname);
+
+		// // Check connection
+		// 				if (!$conn) {
+		// 					echo "<script>console.log('Connection error')</script>";
+		// 				}	echo "<script>console.log('Connection is made')</script>";
+
+		// 				$sql = "SELECT * FROM names ORDER BY id DESC";
+
+		// 				if (mysqli_query($conn, $sql)) {
+		// 					echo "<script>console.log('Query succedeed')</script>";
+		// 				} else {
+		// 					echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+		// 					echo "<script>console.log('Query failed')</script>";
+		// 				}
+
+		// 				$result = mysqli_query($conn, $sql);
+		// 				$row = mysqli_fetch_assoc($result);
+
+		// 				echo "<script>console.log('Connection success')</script>";
+
+		// 				mysqli_close($conn);
+		// 				echo "<script>console.log('Connection closed')</script>";
+
+		// 				// $instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row['names']);
+		// 				$instructions = "Also this".$row['names'];
+		// 			}else{
+		// 				// $instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row['names']);	
+		// 				$instructions = "Also this".$row['names'];		
+		// 			}
+		// 			echo wpautop( wptexturize( $instructions ) ) . PHP_EOL;
+		// 		}
+		// 	}
+
+
+
+
+		public function thankyou_page($order, $sent_to_admin, $plain_text = false) {
+			$t = explode("-",$this->names_under);
+			$single_name = array_rand($t,1);
+			$mail_name = $t[$single_name];
+			echo $mail_name;
 			if ( $this->instructions ) {
-				$servername = "localhost";
-				$username = "limitle1_wp704";
-				$password = "7]p6-5C95S";
-				$dbname = "limitle1_wp704";
-
-		// Create connection
-				$conn = new mysqli($servername, $username, $password, $dbname);
-
-		// Check connection
-				if (!$conn) {
-					echo "<script>console.log('Connection error')</script>";
-				}	echo "<script>console.log('Connection is made')</script>";
-
-				$sql = "INSERT INTO names (names) VALUES ('$this->mail_name')";
-
-				if (mysqli_query($conn, $sql)) {
-					echo "<script>console.log('Record created')</script>";
-				} else {
-					echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-					echo "<script>console.log('Record error')</script>";
-				}
-
-				echo "<script>console.log('Connection success')</script>";
-				mysqli_close($conn);
-				echo "<script>console.log('Connection closed')</script>";
-
-
 				if($this->link_url !== ''){
-					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name);
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$mail_name);			
 				}else{
-					$t = explode("-",$this->names_under);
-					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$this->mail_name.$this->name_selection);
+					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$mail_name.$this->name_selection);	
 				}
 				echo wpautop( wptexturize( $instructions ) );
 			}
-		}
 
-			/**
-		 * Add content to the WC emails.
-		 *
-		 * @access public
-		 * @param WC_Order $order
-		 * @param bool $sent_to_admin
-		 * @param bool $plain_text
-		 */
+			if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
+				if($this->link_url !== ''){
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$mail_name);			
 
-			public function email_instructions( $order, $sent_to_admin, $plain_text = false) {
-				if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
-					if($this->link_url !== ''){
-
-						$servername = "localhost";
-						$username = "limitle1_wp704";
-						$password = "7]p6-5C95S";
-						$dbname = "limitle1_wp704";
-
-		// Create connection
-						$conn = new mysqli($servername, $username, $password, $dbname);
-
-		// Check connection
-						if (!$conn) {
-							echo "<script>console.log('Connection error')</script>";
-						}	echo "<script>console.log('Connection is made')</script>";
-
-						$sql = "SELECT * FROM names ORDER BY id DESC";
-
-						if (mysqli_query($conn, $sql)) {
-							echo "<script>console.log('Query succedeed')</script>";
-						} else {
-							echo "Error: " . $sql . "<br>" . mysqli_error($conn);
-							echo "<script>console.log('Query failed')</script>";
-						}
-
-						$result = mysqli_query($conn, $sql);
-						$row = mysqli_fetch_assoc($result);
-						
-						echo "<script>console.log('Connection success')</script>";
-
-						mysqli_close($conn);
-						echo "<script>console.log('Connection closed')</script>";
-
-						// $instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row['names']);
-						$instructions = "Also this".$row['names'];
-					}else{
-						// $instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row['names']);	
-						$instructions = "Also this".$row['names'];		
-					}
-					echo wpautop( wptexturize( $instructions ) ) . PHP_EOL;
+				}else{
+					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$mail_name);			
 				}
+
+				echo wpautop( wptexturize( $instructions ) ) . PHP_EOL;
+
 			}
+
+		}
 
 		/**
 		 * Process the payment and return the result

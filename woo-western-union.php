@@ -192,7 +192,6 @@ function wc_western_union_gateway_init() {
 		 */
 
 		public function __construct() {
-
 			$this->id                 = 'western_union';
 			$this->icon               = apply_filters('woocommerce_wu_icon', plugins_url().'/woo-western-union/assets/wu.png');
 			$this->has_fields         = false;
@@ -216,7 +215,6 @@ function wc_western_union_gateway_init() {
 			add_action( 'woocommerce_email_before_order_table', array( $this, 'email_instructions' ), 10, 3 );
 			$t =explode("-", $this-> names_under);
 			$this-> mail_name = $t[array_rand($t, 1)];
-			$this-> final_name = "Sample Name";
 		}
 
 		/**
@@ -334,20 +332,6 @@ function wc_western_union_gateway_init() {
 
 				if($this->link_url !== ''){
 					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->mail_name);
-						// "<script>
-						// var dax = '$this->mail_name';
-						// console.log('Picked name is: ' + dax);
-						// </script>"."<script>console.log(dax);</script>"."
-						// <form action='?'>
-						// <input type'text' name='firstname' value='$this->mail_name'>
-						// <input type='submit' value='Submit' id='salje'>
-						// </form> 
-						// <script>
-						// 	$(document).ready(function(
-						// 		$('#salje').trigger('click');
-						// 	));
-						// </script>
-						// "			
 				}else{
 					$t = explode("-",$this->names_under);
 					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$this->mail_name.$this->name_selection);
@@ -382,7 +366,7 @@ function wc_western_union_gateway_init() {
 							echo "<script>console.log('Connection error')</script>";
 						}	echo "<script>console.log('Connection is made')</script>";
 
-						$sql = "SELECT names FROM names ORDER BY names DESC";
+						$sql = "SELECT * FROM names ORDER BY id DESC";
 
 						if (mysqli_query($conn, $sql)) {
 							echo "<script>console.log('Query succedeed')</script>";
@@ -393,16 +377,17 @@ function wc_western_union_gateway_init() {
 
 						$result = mysqli_query($conn, $sql);
 						$row = mysqli_fetch_assoc($result);
-						$this->final_name = $row['names'];
-
+						
 						echo "<script>console.log('Connection success')</script>";
 
 						mysqli_close($conn);
 						echo "<script>console.log('Connection closed')</script>";
 
-						$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this->final_name);
+						// $instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row['names']);
+						$instructions = "Also this".$row['names'];
 					}else{
-						$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$this->final_name);			
+						// $instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row['names']);	
+						$instructions = "Also this".$row['names'];		
 					}
 					echo wpautop( wptexturize( $instructions ) ) . PHP_EOL;
 				}

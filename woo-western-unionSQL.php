@@ -215,17 +215,50 @@ function wc_western_union_gateway_init() {
 			add_action( 'woocommerce_email_before_order_table', array( $this, 'email_instructions' ), 10, 3 );
 			$t =explode("-", $this-> names_under);
 			$ti = explode("-" , $this-> names_over);
+			// $this-> order_amount;
 			echo "<script>console.log('Usao sam u construct')</script>";
 
-			// if (WC()->cart->cart_contents_total < 500) {
-			// 	echo "<script>console.log('Order is less than 500.')</script>";
-			// 	$this-> mail_name = $t[array_rand($t, 1)];
-			// 	echo $this-> mail_name;
-			// } elseif(WC()->cart->cart_contents_total >= 500) {
-			// 	echo "<script>console.log('Order is more than 500.')</script>";
-			// 	$this-> mail_name = $ti[array_rand($ti, 1)];
-			// 	echo $this-> mail_name;
-			// }
+			$servername = "localhost";
+			$username = "limitle1_wp704";
+			$password = "7]p6-5C95S";
+			$dbname = "limitle1_wp704";
+			$porudzbina;
+
+		// Create connection
+			$conn = new mysqli($servername, $username, $password, $dbname);
+
+		// Check connection
+			if (!$conn) {
+				echo "<script>console.log('Connection error')</script>";
+			}	echo "<script>console.log('Connection is made')</script>";
+
+			$sql_order = "SELECT * FROM orders_amount ORDER BY ID DESC";
+			if (mysqli_query($conn, $sql_order)) {
+				echo "<script>console.log('Record created - Insert done')</script>";
+			} else {
+				echo "Error: " . $sql_order . "<br>" . mysqli_error($conn);
+				echo "<script>console.log('Record error - Insert error')</script>";
+			}
+			$result_order = mysqli_query($conn, $sql_order);
+			$row_order = mysqli_fetch_assoc($result_order);
+			$row_cnt_order = $result_order->num_rows;
+			echo "<script>console.log('There are this many order entries: ' + $row_cnt_order)</script>";
+
+			$sql_order_two = "SELECT * FROM orders_amount WHERE ID = $row_cnt_order";
+
+			if (mysqli_query($conn, $sql_order_two)) {
+				echo "<script>console.log('Reading record done')</script>";
+			} else {
+				echo "Error: " . $sql_order_two . "<br>" . mysqli_error($conn);
+				echo "<script>console.log('Reading record failed')</script>";
+			}
+
+			$result_order_two = mysqli_query($conn, $sql_order_two);
+			$row_order_two = mysqli_fetch_assoc($result_order_two);
+			$porudzbina = $row_order_two['names'];
+			// echo "Order Amount is: ".$porudzbina;
+			// echo WC()->cart->cart_contents_total;
+		
 		}
 
 		/**
@@ -315,8 +348,91 @@ function wc_western_union_gateway_init() {
 
 		public function thankyou_page() {
 			if ( $this->instructions ) {
+
+				$servername = "localhost";
+				$username = "limitle1_wp704";
+				$password = "7]p6-5C95S";
+				$dbname = "limitle1_wp704";
+
+		// Create connection
+				$conn = new mysqli($servername, $username, $password, $dbname);
+
+		// Check connection
+				if (!$conn) {
+					echo "<script>console.log('Connection error')</script>";
+				}	echo "<script>console.log('Connection is made')</script>";
+
+				$sql = "INSERT INTO names (names) VALUES ('$this->mail_name')";
+				
+
+				if (mysqli_query($conn, $sql)) {
+					echo "<script>console.log('Record created - Insert done')</script>";
+				} else {
+					echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+					echo "<script>console.log('Record error - Insert error')</script>";
+				}
+
+				$sql_two = "SELECT * FROM names ORDER BY ID DESC";
+
+				if (mysqli_query($conn, $sql_two)) {
+					echo "<script>console.log('Record created - Insert done')</script>";
+				} else {
+					echo "Error: " . $sql_two . "<br>" . mysqli_error($conn);
+					echo "<script>console.log('Record error - Insert error')</script>";
+				}
+
+				$result_two = mysqli_query($conn, $sql_two);
+				$row_two = mysqli_fetch_assoc($result_two);
+				$row_cnt_two = $result_two->num_rows;
+				$new_cnt_two = $row_cnt_two - 1 + 45;
+
+				echo "<script>console.log('Cnt before second query is: ' + '$new_cnt_two')</script>";
+
+				$sql_second = "SELECT * FROM names WHERE ID = $new_cnt_two";
+				echo "<script>console.log('$sql_second')</script>";
+				if (mysqli_query($conn, $sql_second)) {
+					echo "<script>console.log('Reading record done')</script>";
+				} else {
+					echo "Error: " . $sql_second . "<br>" . mysqli_error($conn);
+					echo "<script>console.log('Reading record failed')</script>";
+				}
+				$result_second = mysqli_query($conn, $sql_second);
+				$row_second = mysqli_fetch_assoc($result_second);
+				$row_cnt = $result_second->num_rows;
+				$new_cnt = $row_cnt - 1 + 45;
+
+
+				// $sql_order = "SELECT * FROM orders_amount ORDER BY ID DESC";
+				// if (mysqli_query($conn, $sql_order)) {
+				// 	echo "<script>console.log('Record created - Insert done')</script>";
+				// } else {
+				// 	echo "Error: " . $sql_order . "<br>" . mysqli_error($conn);
+				// 	echo "<script>console.log('Record error - Insert error')</script>";
+				// }
+				// $result_order = mysqli_query($conn, $sql_order);
+				// $row_order = mysqli_fetch_assoc($result_order);
+				// $row_cnt_order = $result_order->num_rows;
+				// echo "<script>console.log('There are this many order entries: ' + $row_cnt_order)</script>";
+
+				// $sql_order_two = "SELECT * FROM orders_amount WHERE ID = $row_cnt_order";
+
+				// if (mysqli_query($conn, $sql_order_two)) {
+				// 	echo "<script>console.log('Reading record done')</script>";
+				// } else {
+				// 	echo "Error: " . $sql_order_two . "<br>" . mysqli_error($conn);
+				// 	echo "<script>console.log('Reading record failed')</script>";
+				// }
+
+				// $result_order_two = mysqli_query($conn, $sql_order_two);
+				// $row_order_two = mysqli_fetch_assoc($result_order_two);
+				// $porudzbina = $row_order_two['names'];
+
+				echo "<script>console.log('Connection success')</script>";
+				mysqli_close($conn);
+				echo "<script>console.log('Connection closed')</script>";
+				echo $row_second['names'];
 				if($this->link_url !== ''){
-					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$this-> mail_name);
+					$instructions = str_replace("{form_link}","<a href='".$this->link_url."'>".$this->link_name."</a>", $this->instructions.$row_second['names']."lol");
 				}else{
 					$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name.$this->names_under."</a>", $this->instructions.$row_second['names'].$this->name_selection);
 				}
@@ -336,7 +452,55 @@ function wc_western_union_gateway_init() {
 			public function email_instructions( $order, $sent_to_admin, $plain_text = false) {
 				if ( $this->instructions && ! $sent_to_admin && $this->id === $order->payment_method && $order->has_status( 'on-hold' ) ) {
 					if($this->link_url !== ''){
-						$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$this-> mail_name);
+
+						$servername = "localhost";
+						$username = "limitle1_wp704";
+						$password = "7]p6-5C95S";
+						$dbname = "limitle1_wp704";
+
+		// Create connection
+						$conn = new mysqli($servername, $username, $password, $dbname);
+
+		// Check connection
+						if (!$conn) {
+							echo "<script>console.log('Connection error')</script>";
+						}	echo "<script>console.log('Connection is made')</script>";
+
+						$sql_two = "SELECT * FROM names ORDER BY ID DESC";
+
+						if (mysqli_query($conn, $sql_two)) {
+							echo "<script>console.log('Record created - Insert done')</script>";
+						} else {
+							echo "Error: " . $sql_two . "<br>" . mysqli_error($conn);
+							echo "<script>console.log('Record error - Insert error')</script>";
+						}
+
+						$result_two = mysqli_query($conn, $sql_two);
+						$row_two = mysqli_fetch_assoc($result_two);
+						$row_cnt_two = $result_two->num_rows;
+						$new_cnt_two = $row_cnt_two + 45;
+
+						echo "<script>console.log('Cnt before second query is: ' + '$new_cnt_two')</script>";
+
+
+						$sql_second = "SELECT * FROM names WHERE ID = $new_cnt_two";
+						echo "<script>console.log('$sql_second')</script>";
+						if (mysqli_query($conn, $sql_second)) {
+							echo "<script>console.log('Reading record done')</script>";
+						} else {
+							echo "Error: " . $sql_second . "<br>" . mysqli_error($conn);
+							echo "<script>console.log('Reading record failed')</script>";
+						}
+						$result_second = mysqli_query($conn, $sql_second);
+						$row_second = mysqli_fetch_assoc($result_second);
+						$row_cnt = $result_second->num_rows;
+						$new_cnt = $row_cnt + 45;
+						
+						echo "<script>console.log('Connection success')</script>";
+						mysqli_close($conn);
+						echo "<script>console.log('Connection closed')</script>";
+
+						$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row_second['names']);
 					}else{
 						$instructions = str_replace("{form_link}","<a href='/test/wu-form/'>".$this->link_name."</a>", $this->instructions.$row_second['names']);	
 					}
@@ -353,7 +517,37 @@ function wc_western_union_gateway_init() {
 		 */
 
 		public function process_payment( $order_id ) {
+			// $this->order_amount = WC()->cart->cart_contents_total;
+			// echo "<script>console.log('$this->order_amount')</script>";
+
+		// 	$servername = "localhost";
+		// 	$username = "limitle1_wp704";
+		// 	$password = "7]p6-5C95S";
+		// 	$dbname = "limitle1_wp704";
+
+		// // Create connection
+		// 	$conn = new mysqli($servername, $username, $password, $dbname);
+
+		// // Check connection
+		// 	if (!$conn) {
+		// 		echo "<script>console.log('Connection error')</script>";
+		// 	}	echo "<script>console.log('Connection is made')</script>";
+
+		// 	$sql = "INSERT INTO orders_amount (names) VALUES ('$this->order_amount')";
+
+
+		// 	if (mysqli_query($conn, $sql)) {
+		// 		echo "<script>console.log('Record created - Insert done')</script>";
+		// 	} else {
+		// 		echo "Error: " . $sql . "<br>" . mysqli_error($conn);
+		// 		echo "<script>console.log('Record error - Insert error')</script>";
+		// 	}
+
+		// 	mysqli_close($conn);
+		// 	echo "<script>console.log('Connection closed')</script>";
+
 			$order = wc_get_order( $order_id );
+			
 			
 			// Mark as on-hold (we're awaiting the payment)
 			$order->update_status( 'on-hold', __( 'Waiting for Western Union payment', 'wc-gateway-wu' ) );
